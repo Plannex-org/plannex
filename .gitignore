@@ -1,0 +1,19 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Build
+dist/
+build/
+.cache/
+.vite/
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.*
