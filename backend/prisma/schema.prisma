@@ -1,0 +1,120 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+//// ENUMS ////
+enum Status {
+  NotStarted
+  InProgress
+  Completed
+}
+
+enum UserRole {
+  OWNER
+  MANAGER
+  DEVELOPER
+}
+
+//// MODELS ////
+
+model User {
+  id         String     @id @default(cuid())
+  name       String
+  email      String     @unique
+  password   String
+  role       UserRole?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  deletedAt  DateTime?
+  
+  projects   Project[]
+  tasks      Task[]        @relation("TaskCreatedBy")
+}
+
+model Project {
+  id          String     @id @default(cuid())
+  title       String
+  name        String
+  description String?
+  startDate   DateTime?
+  endDate     DateTime?
+
+  createdBy   User        @relation(fields: [createdById], references: [id])
+  createdById String
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
+
+  tasks       Task[]
+}
+
+model Task {
+  id              String       @id @default(cuid())
+  name            String
+  description     String?
+  status          Status       @default(NotStarted)
+  
+  optimisticTime  Float?
+  probableTime    Float?
+  pessimisticTime Float?
+  
+  earliestStart   DateTime?
+  earliestFinish  DateTime?
+  latestStart     DateTime?
+  latestFinish    DateTime?
+  
+
+  project         Project      @relation(fields: [projectId], references: [id])
+  projectId       String
+
+  createdBy       User         @relation("TaskCreatedBy", fields: [createdById], references: [id])
+  createdById     String
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime?
+
+  predecessors    TaskDependency[] @relation("PredecessorTasks")
+  successors      TaskDependency[] @relation("SuccessorTasks")
+  subtasks        Subtask[]
+  margins         TaskMargin?
+}
+
+model Subtask {
+  id        String     @id @default(cuid())
+  name      String
+  status    Status     @default(NotStarted)
+
+  task      Task       @relation(fields: [taskId], references: [id])
+  taskId    String
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+}
+
+model TaskDependency {
+  id             String  @id @default(cuid())
+  predecessor    Task    @relation("PredecessorTasks", fields: [predecessorId], references: [id])
+  predecessorId  String
+
+  successor      Task    @relation("SuccessorTasks", fields: [successorId], references: [id])
+  successorId    String
+ 
+  @@unique([predecessorId, successorId])
+}
+
+//// TABLE MARGE ////
+model TaskMargin {
+  id          String   @id @default(cuid())
+  totalMargin Float?
+  freeMargin  Float?
+
+  task        Task     @relation(fields: [taskId], references: [id])
+  taskId      String   @unique
+}
