@@ -1,29 +1,34 @@
-const mongoose = require("mongoose");
+// src/domains/task/task.model.js
 
-const taskSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    description: { type: String },
-    status: {
-        type: String,
-        enum: ["NOT_STARTED", "IN_PROGRESS", "COMPLETED"],
-        default: "NOT_STARTED"
+import prisma from "../../../prisma/client.js";
+
+
+
+export const TaskModel = {
+
+
+    get prisma() {
+        return prisma.task;
     },
 
-    optimisticTime: Number,
-    probableTime: Number,
-    pessimisticTime: Number,
 
-    earliestStart: Date,
-    earliestFinish: Date,
-    latestStart: Date,
-    latestFinish: Date,
+    shape(data) {
+        return {
+            name: data.name,
+            description: data.description || null,
+            status: data.status || "NotStarted",
 
-    projectId: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: true },
-    createdById: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+            optimisticTime: data.optimisticTime || null,
+            probableTime: data.probableTime || null,
+            pessimisticTime: data.pessimisticTime || null,
 
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
-    deletedAt: { type: Date }
-});
+            earliestStart: data.earliestStart || null,
+            earliestFinish: data.earliestFinish || null,
+            latestStart: data.latestStart || null,
+            latestFinish: data.latestFinish || null,
 
-module.exports = mongoose.model("Task", taskSchema);
+            projectId: data.projectId,
+            createdById: data.createdById,
+        };
+    }
+};

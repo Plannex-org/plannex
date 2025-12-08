@@ -1,23 +1,17 @@
-const express = require("express");
+// src/domains/task/task.routes.js
+import express from "express";
+import { taskController } from "./task.controller.js";
+
 const router = express.Router();
-const taskController = require("./task.controller");
 
-// CREATE
-router.post("/", taskController.createTask);
+router.post("/", taskController.create); // CREATE
+router.get("/", taskController.getAll); // READ ALL
+router.get("/:id", taskController.getOne); // READ ONE
+router.put("/:id", taskController.update); // UPDATE
+router.delete("/:id", taskController.remove); // DELETE
 
-// READ ALL TASKS OF PROJECT
-router.get("/project/:projectId", taskController.getTasksByProject);
+export default router;
 
-// READ ONE
-router.get("/:id", taskController.getTaskById);
-
-// UPDATE
-router.patch("/:id", taskController.updateTask);
-
-// DELETE (soft delete)
-router.delete("/:id", taskController.deleteTask);
-
-module.exports = router;
 /*
 import express from "express";
 

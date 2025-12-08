@@ -1,28 +1,69 @@
-const Task = require("./task.model");
+// src/domains/task/task.service.js
+import prisma from "../../../prisma/client.js";
 
-class TaskService {
+export const taskService = {
 
+    // CREATE TASK
     async createTask(data) {
-        const task = new Task(data);
-        return await task.save();
-    }
+        return prisma.task.create({
+            data: {
+                name: data.name,
+                description: data.description,
+                status: data.status,
+                optimisticTime: data.optimisticTime,
+                probableTime: data.probableTime,
+                pessimisticTime: data.pessimisticTime,
+                projectId: data.projectId,
+                createdById: data.createdById
+            }
+        });
+    },
 
-    async getTasksByProject(projectId) {
-        return await Task.find({ projectId, deletedAt: null });
-    }
+    // GET ALL TASKS
+    async getAllTasks() {
+        return prisma.task.findMany({
+            include: {
+                subtasks: true,
+                predecessors: true,
+                successors: true,
+                margins: true
+            }
+        });
+    },
 
+    // GET ONE TASK
     async getTaskById(id) {
-        return await Task.findOne({ _id: id, deletedAt: null });
-    }
+        return prisma.task.findUnique({
+            where: { id },
+            include: {
+                subtasks: true,
+                predecessors: true,
+                successors: true,
+                margins: true
+            }
+        });
+    },
 
+    // UPDATE TASK
     async updateTask(id, data) {
-        data.updatedAt = Date.now();
-        return await Task.findByIdAndUpdate(id, data, { new: true });
-    }
+        return prisma.task.update({
+            where: { id },
+            data: {
+                name: data.name,
+                description: data.description,
+                status: data.status,
+                optimisticTime: data.optimisticTime,
+                probableTime: data.probableTime,
+                pessimisticTime: data.pessimisticTime
+            }
+        });
+    },
 
+    // DELETE TASK (soft delete OR hard delete)
     async deleteTask(id) {
-        return await Task.findByIdAndUpdate(id, { deletedAt: Date.now() }, { new: true });
+        return prisma.task.update({
+            where: { id },
+            data: { deletedAt: new Date() }
+        });
     }
-}
-
-module.exports = new TaskService();
+};

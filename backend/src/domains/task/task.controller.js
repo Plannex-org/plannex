@@ -1,52 +1,58 @@
-const taskService = require("./task.service");
+// src/domains/task/task.controller.js
+import { taskService } from "./task.service.js";
 
-class TaskController {
+export const taskController = {
 
-    async createTask(req, res) {
+    // CREATE
+    async create(req, res) {
         try {
             const task = await taskService.createTask(req.body);
             res.status(201).json(task);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            console.error(error);
+            res.status(500).json({ message: "Erreur lors de la création de la tâche" });
         }
-    }
+    },
 
-    async getTasksByProject(req, res) {
+    // GET ALL
+    async getAll(req, res) {
         try {
-            const tasks = await taskService.getTasksByProject(req.params.projectId);
+            const tasks = await taskService.getAllTasks();
             res.status(200).json(tasks);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            console.error(error);
+            res.status(500).json({ message: "Erreur lors de la récupération des tâches" });
         }
-    }
+    },
 
-    async getTaskById(req, res) {
+    // GET ONE
+    async getOne(req, res) {
         try {
             const task = await taskService.getTaskById(req.params.id);
-            if (!task) return res.status(404).json({ message: "Task not found" });
+            if (!task) return res.status(404).json({ message: "Tâche introuvable" });
             res.status(200).json(task);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            res.status(500).json({ message: "Erreur" });
         }
-    }
+    },
 
-    async updateTask(req, res) {
+    // UPDATE
+    async update(req, res) {
         try {
             const task = await taskService.updateTask(req.params.id, req.body);
             res.status(200).json(task);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            res.status(500).json({ message: "Erreur lors de la modification" });
         }
-    }
+    },
 
-    async deleteTask(req, res) {
+    // DELETE
+    async remove(req, res) {
         try {
             const task = await taskService.deleteTask(req.params.id);
-            res.status(200).json({ message: "Task deleted", task });
+            res.status(200).json({ message: "Tâche supprimée", task });
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            res.status(500).json({ message: "Erreur lors de la suppression" });
         }
     }
-}
-
-module.exports = new TaskController();
+};
