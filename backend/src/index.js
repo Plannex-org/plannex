@@ -2,12 +2,22 @@ import express from "express";
 import appRouter from "./router.js";
 import cors from "cors";
 
+
+
 const app = express();
 const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("✅ API is running");
+});
 app.use("/api", appRouter);
+
+
+
+
 
 app.listen(PORT, () => {
   console.log("=======================================");

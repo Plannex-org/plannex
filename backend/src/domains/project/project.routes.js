@@ -1,13 +1,13 @@
-import express from "express";
+// src/domains/project/project.routes.js
+import { Router } from 'express'
+import { ProjectController } from './project.controller.js'
 
-const router = express.Router();
+const router = Router()
 
-router.get("/", (req, res) => {
-  res.json({ message: "Get all projects placeholder" });
-});
+router.post('/', ProjectController.create)
+router.get('/', ProjectController.getAll)
+router.get('/:id', ProjectController.getById)
+router.put('/:id', ProjectController.update)
+router.delete('/:id', ProjectController.remove)
 
-router.post("/", (req, res) => {
-  res.json({ message: "Create project placeholder" });
-});
-
-export default router;
+export default router

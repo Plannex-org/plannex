@@ -16,3 +16,4 @@ appRouter.use("/tasks", authMiddleware, taskRouter);
 appRouter.use("/users", authMiddleware, userRouter);
 
 export default appRouter;
+
