@@ -1,20 +1,8 @@
 import type { RouteObject } from "react-router-dom";
-import AuthLayout from "./components/auth-layout";
-import Login from "./pages/login";
-import Register from "./pages/register";
-import UnProtectedRoutes from "@/components/guards/unprotected-routes";
+import LoginPage from "./views/login-page";
+import RegisterPage from "./views/register-page";
 
 export const authRoutes: RouteObject[] = [
-  {
-    path: "/auth",
-    element: (
-      <UnProtectedRoutes>
-        <AuthLayout />
-      </UnProtectedRoutes>
-    ),
-    children: [
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
-    ],
-  },
+  { path: "/login", element: <LoginPage /> },
+  { path: "/register", element: <RegisterPage /> },
 ];
