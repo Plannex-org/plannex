@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/providers/auth-context";
-import { projectsMockApi, type Project } from "@/domains/projects/api/projects.mock";
+import { projectsMockApi, type Project } from "@/domains/projects/services/projects.mock";
 
 export default function AppShell({ children }: PropsWithChildren) {
   const { logout } = useAuth();

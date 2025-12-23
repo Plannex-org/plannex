@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import AppShell from "@/components/layout/app-shell";
-import { projectsMockApi } from "../api/projects.mock";
-import { tasksMockApi, type Task, type TaskStatus } from "@/domains/tasks/api/tasks.mock.ts";
+import { projectsMockApi } from "../services/projects.mock";
+import { tasksMockApi, type Task, type TaskStatus } from "@/domains/tasks/services/tasks.mock";
 import PertCanvas from "@/domains/pert/components/pert-canvas";
 
 type Tab = "Tasks" | "Pert" | "Gantt";

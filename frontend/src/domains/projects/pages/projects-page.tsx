@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppShell from "@/components/layout/app-shell";
-import { projectsMockApi, type Project } from "../api/projects.mock";
+import { projectsMockApi, type Project } from "../services/projects.mock";
 
 export default function ProjectsPage() {
   const nav = useNavigate();
