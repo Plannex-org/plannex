@@ -3,6 +3,7 @@ import authRouter from "./domains/auth/auth.routes.js";
 import projectRouter from "./domains/project/project.routes.js";
 import taskRouter from "./domains/task/task.routes.js";
 import userRouter from "./domains/user/user.routes.js";
+import pertRouter from "./domains/pert/pert.routes.js";
 import { authMiddleware } from "./core/middleware/auth.js";
 
 const appRouter = express.Router();
@@ -14,5 +15,6 @@ appRouter.use("/auth", authRouter);
 appRouter.use("/projects", authMiddleware, projectRouter);
 appRouter.use("/tasks", authMiddleware, taskRouter);
 appRouter.use("/users", authMiddleware, userRouter);
+appRouter.use("/", authMiddleware, pertRouter);
 
 export default appRouter;
