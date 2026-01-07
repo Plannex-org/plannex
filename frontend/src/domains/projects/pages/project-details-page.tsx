@@ -2,8 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import AppShell from "@/components/layout/app-shell";
 import { projectsMockApi } from "../services/projects.mock";
-import { tasksMockApi, type Task, type TaskStatus } from "@/domains/tasks/services/tasks.mock";
+import {
+  tasksMockApi,
+  type Task,
+  type TaskStatus,
+} from "@/domains/tasks/services/tasks.mock";
 import PertCanvas from "@/domains/pert/components/pert-canvas";
+import ProjectGantt from "@/domains/gantt/components/project-gantt";
 
 type Tab = "Tasks" | "Pert" | "Gantt";
 
@@ -51,7 +56,9 @@ export default function ProjectDetailsPage() {
   };
 
   const togglePred = (id: string) => {
-    setPredecessors((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    setPredecessors((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
   };
 
   const addTask = async () => {
@@ -131,8 +138,13 @@ export default function ProjectDetailsPage() {
                   <div className="text-[#000157]">{t.name}</div>
                   <div>{t.durationDays} days</div>
                   <div className="text-black/60">
-                    {t.predecessors.length ? t.predecessors.length : "-"}
+                    {t.predecessors.length
+                      ? t.predecessors
+                         .map((id) => tasks.find((x) => x.id === id)?.name || id)
+                         .join(", ")
+                      : "-"}
                   </div>
+
                   <div>
                     <span
                       className={`px-3 py-1 rounded-full text-xs ${
@@ -165,10 +177,9 @@ export default function ProjectDetailsPage() {
         {tab === "Pert" && <PertCanvas tasks={pertTasks} />}
 
         {tab === "Gantt" && (
-          <div className="bg-white/70 rounded-2xl p-6 text-sm text-black/60">
-            Gantt chart will be implemented later.
-          </div>
+           <ProjectGantt projectStart={startDate} tasks={tasks} />
         )}
+
       </div>
 
       {/* Add Task modal */}
@@ -225,7 +236,9 @@ export default function ProjectDetailsPage() {
                       <span className="truncate max-w-[180px]">{t.name}</span>
                     </label>
                   ))}
-                  {!tasks.length && <div className="text-xs text-black/50">No tasks yet</div>}
+                  {!tasks.length && (
+                    <div className="text-xs text-black/50">No tasks yet</div>
+                  )}
                 </div>
               </div>
 
